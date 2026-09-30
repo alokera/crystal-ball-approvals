@@ -70,7 +70,7 @@ export function SummaryView() {
         <div className="summary-actions">
           {data.source === 'fallback' && (
             <span className="badge badge-fallback" title="The AI model was unavailable, so this summary uses the standard urgency rules.">
-              AI unavailable · rule-based
+              AI unavailable, showing basic summary.
             </span>
           )}
           {speech.supported && (

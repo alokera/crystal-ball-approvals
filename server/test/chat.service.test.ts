@@ -69,6 +69,7 @@ describe('streamChat', () => {
     });
     const events = await collect(streamChat({ llm: client, queue, request: req('talk', 'hi'), timeoutMs: 200 }));
     expect(events).toContainEqual({ type: 'fallback', reason: 'llm_error' });
+    expect(textOf(events)).toMatch(/^AI unavailable, showing basic summary\./);
     expect(events.at(-1)).toEqual({ type: 'done', source: 'fallback' });
   });
 

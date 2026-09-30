@@ -37,7 +37,7 @@ describe('<SummaryView />', () => {
   it('marks a fallback summary as rule-based', async () => {
     stubFetch(jsonResponse({ ...summary, source: 'fallback' }));
     render(<SummaryView />);
-    expect(await screen.findByText(/AI unavailable/i)).toBeInTheDocument();
+    expect(await screen.findByText('AI unavailable, showing basic summary.')).toBeInTheDocument();
   });
 
   it('shows an error instead of rendering a malformed summary', async () => {

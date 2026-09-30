@@ -42,7 +42,7 @@ function teachFallback(): string {
 function talkFallback(queue: ApprovalItem[], today: string): string {
   const lines = ruleBasedItems(queue, today).map((i, n) => `${n + 1}. ${i.title} (${i.priority}): ${i.reason}`);
   return [
-    "I can't reach the AI model right now, so here is the queue ranked by the standard urgency rules:",
+    'AI unavailable, showing basic summary. The queue below is ranked by the standard urgency rules:',
     ruleBasedHeadline(queue, today),
     lines.join('\n'),
   ].join('\n\n');
