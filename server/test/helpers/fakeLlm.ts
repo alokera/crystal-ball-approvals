@@ -4,7 +4,7 @@ import rawQueue from '../../src/data/approvals.json';
 
 export const queue = ApprovalQueue.parse(rawQueue);
 
-type Overrides = {
+export type Overrides = {
   structured?: (args: StructuredArgs) => Promise<unknown>;
   stream?: (args: StreamArgs) => AsyncIterable<string>;
 };

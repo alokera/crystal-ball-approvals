@@ -1,8 +1,8 @@
 import { SummaryResponse } from '@cb/contracts';
 import { generateSummary } from '../src/services/summary';
-import { fakeLlm, hangUntilAborted, queue, validSummary } from './helpers/fakeLlm';
+import { fakeLlm, hangUntilAborted, queue, validSummary, type Overrides } from './helpers/fakeLlm';
 
-const run = (structured: Parameters<typeof fakeLlm>[0]['structured'], timeoutMs = 200) => {
+const run = (structured: Overrides['structured'], timeoutMs = 200) => {
   const { client, calls } = fakeLlm({ structured });
   return { calls, result: generateSummary({ llm: client, queue, locale: 'en', timeoutMs }) };
 };
