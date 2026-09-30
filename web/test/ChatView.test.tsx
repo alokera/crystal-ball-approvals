@@ -23,6 +23,8 @@ describe('<ChatView />', () => {
 
     expect(await screen.findByRole('status', { name: /assistant is thinking/i })).toBeInTheDocument();
     expect(screen.getByText('Which item first?')).toBeInTheDocument();
+    // Can't send a second question while one is in flight, even with text typed.
+    await userEvent.setup().type(screen.getByRole('textbox', { name: /message/i }), 'another');
     expect(screen.getByRole('button', { name: /send/i })).toBeDisabled();
 
     act(() => sse.push({ type: 'start', mode: 'talk', citations: [] }));
@@ -51,8 +53,10 @@ describe('<ChatView />', () => {
       sse.push({ type: 'done', source: 'ai' });
       sse.close();
     });
-    await waitFor(() => expect(screen.getByRole('button', { name: /send/i })).toBeEnabled());
-    expect(screen.queryByTestId('assistant-message-streaming')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByTestId('assistant-message-streaming')).not.toBeInTheDocument());
+    expect(screen.getByTestId('assistant-message')).toHaveTextContent('Start with the safety specs.');
+    await userEvent.setup().type(screen.getByRole('textbox', { name: /message/i }), 'next');
+    expect(screen.getByRole('button', { name: /send/i })).toBeEnabled();
   });
 
   it('shows an error with a working retry when the request fails', async () => {
