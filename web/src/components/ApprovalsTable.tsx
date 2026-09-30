@@ -59,13 +59,10 @@ export function ApprovalsTable({ items, status, error, onRetry }: Props) {
                     </td>
                   </tr>
                 ))}
-              {items?.map((item, i) => {
+              {items?.map((item) => {
                 const meta = TYPE_META[item.type];
                 return (
-                  <tr
-                    key={item.id}
-                    className={`transition hover:bg-white/[0.03] ${i === 0 ? 'bg-violet-500/10 shadow-[inset_3px_0_0_var(--color-violet-400)]' : ''}`}
-                  >
+                  <tr key={item.id}>
                     <td className={td}>
                       <div className="flex items-center gap-3">
                         <span aria-hidden className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${meta.tone}`}>

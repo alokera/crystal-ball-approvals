@@ -50,7 +50,7 @@ The panel also has a language picker, and every prompt tells the model to answer
 
 | Requirement | Implementation |
 |---|---|
-| React + Next.js + Tailwind | `web/` (App Router, Tailwind v4, dark glassmorphism theme, responsive to phone width). The panel has avatar, header, info/expand/close controls, action cards, Replay Greeting and footer. Loading skeletons, typing indicator, error banners and Retry everywhere |
+| React + Next.js + Tailwind | `web/` (App Router, Tailwind v4, dark glassmorphism theme, responsive to phone width). The panel has avatar, header, info/expand/close controls, action cards, Replay Greeting and footer. The page around it is intentionally minimal (title, search, queue table): only the panel is in scope, so no decorative controls that do nothing. Loading skeletons, typing indicator, error banners and Retry everywhere |
 | Streaming | SSE from Express (`start → delta* → done`), read with `fetch` + `ReadableStream`, rendered token by token |
 | State | Zustand (`web/src/store/assistant.ts`) holds chats per mode, summary, greeting, view and locale. No prop-drilling |
 | Backend | Express + TypeScript `strict` (plus `noUncheckedIndexedAccess`) |

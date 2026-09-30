@@ -172,12 +172,7 @@ export function AssistantPanel({ itemCount }: { itemCount: number }) {
           )}
         </div>
 
-        <footer className="flex justify-between border-t border-white/10 px-4 py-2.5 text-xs text-slate-400">
-          <span>{itemCount} folders / items</span>
-          <a href="#" onClick={(e) => e.preventDefault()} className="text-slate-300 hover:text-white">
-            HMS Panel ↗
-          </a>
-        </footer>
+        <footer className="border-t border-white/10 px-4 py-2.5 text-xs text-slate-400">{itemCount} folders / items</footer>
       </section>
       <button type="button" className={fab} aria-label="Close assistant" onClick={() => setOpen(false)}>
         ✕
