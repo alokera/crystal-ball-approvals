@@ -29,7 +29,7 @@ npm run typecheck
 ### Seeing the failure handling
 | Try this | What you should see |
 |---|---|
-| Remove `ANTHROPIC_API_KEY` and restart | Every action still answers; each answer carries an "AI unavailable" badge |
+| Remove `ANTHROPIC_API_KEY` and restart | Every action still answers, labelled "AI unavailable, showing basic summary." (or a similar badge) |
 | `LLM_TIMEOUT_MS=1` | Same as above, triggered by the timeout path |
 | Stop the server while the page is open | Inline error and **Retry** button; the UI never freezes |
 | `RATE_LIMIT_MAX=2`, then click quickly | Typed 429 message shown in the panel |
@@ -50,14 +50,14 @@ The panel also has a language picker, and every prompt tells the model to answer
 
 | Requirement | Implementation |
 |---|---|
-| React + Next.js | `web/` (App Router). The panel has avatar, header, info/expand/close controls, action cards, Replay Greeting and footer. Loading skeletons, typing indicator, error banners and Retry everywhere |
+| React + Next.js + Tailwind | `web/` (App Router, Tailwind v4, dark glassmorphism theme, responsive to phone width). The panel has avatar, header, info/expand/close controls, action cards, Replay Greeting and footer. Loading skeletons, typing indicator, error banners and Retry everywhere |
 | Streaming | SSE from Express (`start → delta* → done`), read with `fetch` + `ReadableStream`, rendered token by token |
 | State | Zustand (`web/src/store/assistant.ts`) holds chats per mode, summary, greeting, view and locale. No prop-drilling |
 | Backend | Express + TypeScript `strict` (plus `noUncheckedIndexedAccess`) |
 | API contract | `packages/contracts/src/index.ts` was written before any route (see git history). The server validates requests and model output; the client re-validates every response **and every SSE event** |
 | LLM | Anthropic SDK, server-side only. Model is `claude-opus-5-5` at `effort: low` (configurable with `ANTHROPIC_MODEL`). SDK retries are off so the 8s budget holds. Server-side refusal fallback is on (`fallbacks: "default"`) |
 | Structured output | `messages.parse` + `betaZodOutputFormat`, **then** our own `safeParse`. The UI never parses model text |
-| Prompt versioning | `server/prompts/*.ts`, each with `id` + semver `version`. The version is sent in the `x-prompt-version` header and logged with every call |
+| Prompt versioning | `server/prompts/<id>.v1.ts` (summary, chat, help, teach, greeting), each exporting `id` + semver `version`. A breaking rewrite gets a new `.v2.ts` file so versions can be compared side by side. The version is sent in the `x-prompt-version` header and logged with every call |
 | Fallbacks | `withTimeout` / `nextWithin` (`server/src/lib/timeout.ts`), with rules in `server/src/services/rules.ts` |
 | Rate limiting | `express-rate-limit` on `/api/ai/*` only: 20 requests/min, keyed by `x-session-id` + IP |
 | RAG | `server/src/knowledge/`: a ~330-word policy note, 5 chunks, IDF-weighted keyword retrieval |
@@ -97,7 +97,7 @@ Built with Claude Code (Claude Opus 5.5) as a pair programmer: scaffolding, test
 ```
 packages/contracts/   Zod schemas shared by server and web
 server/
-  prompts/            versioned prompts (greeting, summary, talk, help, teach)
+  prompts/            summary.v1.ts, chat.v1.ts, help.v1.ts, teach.v1.ts, greeting.v1.ts
   src/app.ts          Express app factory (DI for LLM, timeout, limits)
   src/llm/            LlmClient interface + Anthropic implementation
   src/services/       summary, greeting, chat stream, deterministic rules

@@ -11,9 +11,12 @@
   },
   "dependencies": {
     "@cb/contracts": "*",
+    "@tailwindcss/postcss": "^4.3.3",
     "next": "^15.0.3",
+    "postcss": "^8.5.28",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwindcss": "^4.3.3",
     "zod": "^4.1.0",
     "zustand": "^5.0.1"
   },

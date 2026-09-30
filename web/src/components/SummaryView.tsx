@@ -1,7 +1,15 @@
 'use client';
 
+import type { Priority } from '@cb/contracts';
 import { useEffect, useState } from 'react';
 import { useAssistant } from '@/store/assistant';
+import { ErrorBanner, FallbackBadge, Skeleton, ghostButton } from './ui';
+
+const PRIORITY_STYLE: Record<Priority, string> = {
+  high: 'bg-red-500/15 text-red-300 ring-red-400/30',
+  medium: 'bg-amber-500/15 text-amber-300 ring-amber-400/30',
+  low: 'bg-sky-500/15 text-sky-300 ring-sky-400/30',
+};
 
 function useSpeech(locale: string) {
   const [speaking, setSpeaking] = useState(false);
@@ -40,21 +48,14 @@ export function SummaryView() {
   }, [loadSummary, locale]);
 
   if (summary.status === 'error') {
-    return (
-      <div className="error-banner" role="alert">
-        <span>{summary.error}</span>
-        <button type="button" className="btn-link" onClick={() => void loadSummary()}>
-          Retry
-        </button>
-      </div>
-    );
+    return <ErrorBanner message={summary.error} onRetry={() => void loadSummary()} />;
   }
 
   if (summary.status !== 'success' || !summary.data) {
     return (
-      <div className="skeleton-list" role="status" aria-label="Preparing summary">
+      <div role="status" aria-label="Preparing summary" className="flex flex-col gap-2.5">
         {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="skeleton" />
+          <Skeleton key={i} />
         ))}
       </div>
     );
@@ -64,33 +65,37 @@ export function SummaryView() {
   const spoken = [data.headline, ...data.items.map((i) => `${i.title}. ${i.reason} ${i.recommendedAction}.`)].join(' ');
 
   return (
-    <div className="summary">
-      <div className="summary-head">
-        <p className="summary-headline">{data.headline}</p>
-        <div className="summary-actions">
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
+        <p className="font-semibold leading-snug text-white">{data.headline}</p>
+        <div className="flex flex-wrap items-center gap-2">
           {data.source === 'fallback' && (
-            <span className="badge badge-fallback" title="The AI model was unavailable, so this summary uses the standard urgency rules.">
+            <FallbackBadge title="The AI model was unavailable, so this summary uses the standard urgency rules.">
               AI unavailable, showing basic summary.
-            </span>
+            </FallbackBadge>
           )}
           {speech.supported && (
-            <button type="button" className="btn-ghost" onClick={() => speech.toggle(spoken)}>
+            <button type="button" className={ghostButton} onClick={() => speech.toggle(spoken)}>
               {speech.speaking ? '■ Stop' : '🔊 Read aloud'}
             </button>
           )}
-          <button type="button" className="btn-ghost" onClick={() => void loadSummary()}>
+          <button type="button" className={ghostButton} onClick={() => void loadSummary()}>
             ↻ Refresh
           </button>
         </div>
       </div>
-      <ol className="summary-list">
+      <ol className="flex flex-col gap-2.5">
         {data.items.map((item) => (
-          <li key={item.id} className="summary-item">
-            <span className={`priority priority-${item.priority}`}>{item.priority}</span>
-            <div>
-              <div className="summary-title">{item.title}</div>
-              <div className="muted">{item.reason}</div>
-              <div className="summary-action">→ {item.recommendedAction}</div>
+          <li key={item.id} className="flex gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+            <span
+              className={`h-fit shrink-0 rounded-md px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide ring-1 ${PRIORITY_STYLE[item.priority]}`}
+            >
+              {item.priority}
+            </span>
+            <div className="min-w-0">
+              <div className="font-medium text-slate-100">{item.title}</div>
+              <div className="text-xs text-slate-400">{item.reason}</div>
+              <div className="mt-1 text-xs text-violet-300">→ {item.recommendedAction}</div>
             </div>
           </li>
         ))}
