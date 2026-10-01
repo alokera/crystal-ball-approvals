@@ -4,10 +4,10 @@ import type { ApprovalItem, ApprovalType } from '@cb/contracts';
 import { ErrorBanner, Skeleton } from './ui';
 
 const TYPE_META: Record<ApprovalType, { label: string; icon: string; tone: string }> = {
-  folder: { label: 'Folder', icon: '📁', tone: 'bg-amber-400/15' },
-  video: { label: 'Video', icon: '🎬', tone: 'bg-rose-400/15' },
-  pdf: { label: 'Pdf', icon: '📄', tone: 'bg-sky-400/15' },
-  image: { label: 'Image', icon: '🖼️', tone: 'bg-emerald-400/15' },
+  folder: { label: 'Folder', icon: '📁', tone: 'bg-amber-50' },
+  video: { label: 'Video', icon: '🎬', tone: 'bg-rose-50' },
+  pdf: { label: 'Pdf', icon: '📄', tone: 'bg-blue-50' },
+  image: { label: 'Image', icon: '🖼️', tone: 'bg-emerald-50' },
 };
 
 const formatDate = (iso: string) =>
@@ -20,15 +20,15 @@ type Props = {
   onRetry: () => void;
 };
 
-const th = 'px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-wider text-slate-400';
+const th = 'px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-wider text-slate-500';
 const td = 'px-5 py-3.5 align-middle';
 
 export function ApprovalsTable({ items, status, error, onRetry }: Props) {
   return (
-    <section aria-labelledby="pending-heading" className="glass overflow-hidden rounded-3xl">
-      <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
-        <h2 id="pending-heading" className="text-sm font-semibold tracking-wider text-slate-100">
-          <span aria-hidden className="mr-1.5 text-violet-400">
+    <section aria-labelledby="pending-heading" className="card overflow-hidden">
+      <div className="flex items-center gap-3 border-b border-slate-200 px-5 py-4">
+        <h2 id="pending-heading" className="text-sm font-semibold tracking-wider text-slate-800">
+          <span aria-hidden className="mr-1.5 text-brand">
             ≡
           </span>
           PENDING APPROVAL REQUESTS
@@ -41,7 +41,7 @@ export function ApprovalsTable({ items, status, error, onRetry }: Props) {
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] border-collapse text-sm">
-            <thead className="border-b border-white/10">
+            <thead className="border-b border-slate-200">
               <tr>
                 <th className={th}>Folder / Content name</th>
                 <th className={th}>Type</th>
@@ -50,7 +50,7 @@ export function ApprovalsTable({ items, status, error, onRetry }: Props) {
                 <th className={th}>Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.06]">
+            <tbody className="divide-y divide-slate-200">
               {status === 'loading' &&
                 [0, 1, 2, 3].map((i) => (
                   <tr key={i}>
@@ -69,25 +69,25 @@ export function ApprovalsTable({ items, status, error, onRetry }: Props) {
                           {meta.icon}
                         </span>
                         <div>
-                          <div className="font-medium text-slate-100">{item.title}</div>
-                          <div className="text-xs text-slate-400">{item.path.join(' › ')}</div>
+                          <div className="font-medium text-slate-800">{item.title}</div>
+                          <div className="text-xs text-slate-500">{item.path.join(' › ')}</div>
                         </div>
                       </div>
                     </td>
                     <td className={td}>
-                      <span className="rounded-lg border border-white/10 px-2.5 py-1 text-xs text-slate-300">{meta.label}</span>
+                      <span className="rounded-lg border border-slate-200 px-2.5 py-1 text-xs text-slate-700">{meta.label}</span>
                     </td>
-                    <td className={`${td} text-slate-300`}>{item.submittedBy}</td>
-                    <td className={`${td} text-slate-300`}>{formatDate(item.submittedAt)}</td>
+                    <td className={`${td} text-slate-600`}>{item.submittedBy}</td>
+                    <td className={`${td} text-slate-600`}>{formatDate(item.submittedAt)}</td>
                     <td className={td}>
-                      <span className="rounded-lg bg-amber-400/15 px-2.5 py-1 text-xs font-medium text-amber-300">Pending Review</span>
+                      <span className="rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-medium text-replay">Pending Review</span>
                     </td>
                   </tr>
                 );
               })}
               {status === 'success' && items?.length === 0 && (
                 <tr>
-                  <td colSpan={5} className={`${td} text-slate-400`}>
+                  <td colSpan={5} className={`${td} text-slate-500`}>
                     No items match your search.
                   </td>
                 </tr>

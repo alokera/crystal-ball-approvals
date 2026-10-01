@@ -6,9 +6,9 @@ import { useAssistant } from '@/store/assistant';
 import { ErrorBanner, FallbackBadge, Skeleton, ghostButton } from './ui';
 
 const PRIORITY_STYLE: Record<Priority, string> = {
-  high: 'bg-red-500/15 text-red-300 ring-red-400/30',
-  medium: 'bg-amber-500/15 text-amber-300 ring-amber-400/30',
-  low: 'bg-sky-500/15 text-sky-300 ring-sky-400/30',
+  high: 'bg-red-100 text-red-600 ring-red-200',
+  medium: 'bg-amber-100 text-amber-700 ring-amber-200',
+  low: 'bg-blue-100 text-blue-600 ring-blue-200',
 };
 
 function useSpeech(locale: string) {
@@ -67,7 +67,7 @@ export function SummaryView() {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-2">
-        <p className="font-semibold leading-snug text-white">{data.headline}</p>
+        <p className="font-semibold leading-snug text-slate-900">{data.headline}</p>
         <div className="flex flex-wrap items-center gap-2">
           {data.source === 'fallback' && (
             <FallbackBadge title="The AI model was unavailable, so this summary uses the standard urgency rules.">
@@ -86,16 +86,16 @@ export function SummaryView() {
       </div>
       <ol className="flex flex-col gap-2.5">
         {data.items.map((item) => (
-          <li key={item.id} className="flex gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+          <li key={item.id} className="flex gap-3 rounded-xl border border-slate-200 bg-white p-3">
             <span
               className={`h-fit shrink-0 rounded-md px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide ring-1 ${PRIORITY_STYLE[item.priority]}`}
             >
               {item.priority}
             </span>
             <div className="min-w-0">
-              <div className="font-medium text-slate-100">{item.title}</div>
-              <div className="text-xs text-slate-400">{item.reason}</div>
-              <div className="mt-1 text-xs text-violet-300">→ {item.recommendedAction}</div>
+              <div className="font-medium text-slate-800">{item.title}</div>
+              <div className="text-xs text-slate-500">{item.reason}</div>
+              <div className="mt-1 text-xs text-brand">→ {item.recommendedAction}</div>
             </div>
           </li>
         ))}

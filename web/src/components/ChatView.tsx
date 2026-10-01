@@ -26,15 +26,15 @@ const COPY: Record<ChatMode, { intro: string; placeholder: string; suggestions: 
 function Message({ message }: { message: UiMessage }) {
   if (message.role === 'user') {
     return (
-      <div className="max-w-[88%] self-end whitespace-pre-wrap rounded-2xl rounded-br-md bg-gradient-to-br from-violet-500 to-fuchsia-500 px-3.5 py-2 text-sm text-white shadow-lg shadow-violet-900/30">
+      <div className="max-w-[88%] self-end whitespace-pre-wrap rounded-2xl rounded-br-md bg-brand px-3.5 py-2 text-sm text-white">
         {message.content}
       </div>
     );
   }
   return (
     <div
-      className={`flex max-w-[88%] flex-col gap-1.5 self-start rounded-2xl rounded-bl-md border bg-white/[0.06] px-3.5 py-2.5 text-sm leading-relaxed ${
-        message.interrupted ? 'border-dashed border-orange-400/60' : 'border-white/10'
+      className={`flex max-w-[88%] flex-col gap-1.5 self-start rounded-2xl rounded-bl-md border bg-slate-100 px-3.5 py-2.5 text-sm leading-relaxed text-slate-800 ${
+        message.interrupted ? 'border-dashed border-orange-400' : 'border-transparent'
       }`}
       data-testid={message.streaming ? 'assistant-message-streaming' : 'assistant-message'}
     >
@@ -44,12 +44,12 @@ function Message({ message }: { message: UiMessage }) {
       <div className="whitespace-pre-wrap [overflow-wrap:anywhere]">
         {message.content}
         {message.streaming && (
-          <span aria-hidden className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-violet-400 align-text-bottom motion-reduce:animate-none" />
+          <span aria-hidden className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-brand align-text-bottom motion-reduce:animate-none" />
         )}
       </div>
       {!!message.citations?.length && (
         <div className="flex flex-wrap items-center gap-1">
-          <span className="text-xs text-slate-400">Sources:</span>
+          <span className="text-xs text-slate-500">Sources:</span>
           {message.citations.map((c) => (
             <span key={c.id} className="chip" title={c.id}>
               {c.title}
@@ -96,7 +96,7 @@ export function ChatView({ mode }: { mode: ChatMode }) {
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto pr-1" aria-live="polite">
         {chat.messages.length === 0 && (
-          <div className="text-sm text-slate-400">
+          <div className="text-sm text-slate-500">
             <p className="mb-3">{copy.intro}</p>
             <div className="flex flex-col items-start gap-1.5">
               {copy.suggestions.map((s) => (
@@ -104,7 +104,7 @@ export function ChatView({ mode }: { mode: ChatMode }) {
                   key={s}
                   type="button"
                   onClick={() => submit(s)}
-                  className="chip text-left transition hover:border-violet-400/60 hover:text-violet-200"
+                  className="chip text-left transition hover:border-brand hover:text-brand"
                 >
                   {s}
                 </button>
@@ -119,13 +119,13 @@ export function ChatView({ mode }: { mode: ChatMode }) {
           <div
             role="status"
             aria-label="Assistant is thinking"
-            className="flex gap-1 self-start rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] px-3.5 py-3"
+            className="flex gap-1 self-start rounded-2xl rounded-bl-md bg-slate-100 px-3.5 py-3"
           >
             {[0, 150, 300].map((delay) => (
               <span
                 key={delay}
                 style={{ animationDelay: `${delay}ms` }}
-                className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-300 motion-reduce:animate-none"
+                className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 motion-reduce:animate-none"
               />
             ))}
           </div>
@@ -134,7 +134,7 @@ export function ChatView({ mode }: { mode: ChatMode }) {
         <div ref={endRef} />
       </div>
 
-      <form onSubmit={onSubmit} className="flex gap-2 border-t border-white/10 pt-3">
+      <form onSubmit={onSubmit} className="flex gap-2 border-t border-slate-200 pt-3">
         <label htmlFor={`chat-input-${mode}`} className="sr-only">
           Message
         </label>
@@ -146,13 +146,13 @@ export function ChatView({ mode }: { mode: ChatMode }) {
           placeholder={copy.placeholder}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={onKeyDown}
-          className="max-h-32 min-h-11 flex-1 resize-none rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-violet-400/70 focus:ring-2 focus:ring-violet-500/20"
+          className="max-h-32 min-h-11 flex-1 resize-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/15"
         />
         <button
           type="submit"
           aria-label="Send"
           disabled={busy || !draft.trim()}
-          className="w-11 shrink-0 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-900/40 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-35"
+          className="w-11 shrink-0 rounded-xl bg-brand text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-35"
         >
           ➤
         </button>
